@@ -1,0 +1,152 @@
+"""
+[55, 66, 77]
+[222, 35, 130]
+[6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
+[15]
+15
+216
+"""
+
+
+class Figure:
+    sides_count = 0
+    __sides = []
+
+    def __init__(self, color, *sides, filled=False):
+        if len(sides) != self.sides_count:
+            self.__sides = 1 * self.sides_count
+        else:
+            self.__sides = sides
+
+        self.__color = color
+        self.filled = filled
+
+    def get_color(self):
+        """
+        Возвращает список RGB цветов
+        """
+
+        return f'{self.__color}'
+
+    def __is_valid_color(self, r, g, b):
+        """
+        Служебный, принимает параметры r, g, b, который проверяет корректность переданных значений
+        перед установкой нового цвета
+        """
+        if 0 <= r <= 255 and 0 <= g <= 255 and 0 <= b <= 255:
+            return True
+        else:
+            print('Ошибка! Цвета должны быть в диапазоне от 0 до 255')
+            return False
+
+    def set_color(self, r, g, b):
+        """
+        Принимает параметры r, g, b - числа и изменяет атрибут __color на соответствующие
+        значения, предварительно проверив их на корректность
+        """
+
+        if self.__is_valid_color(r, g, b):
+            self.__color = [r, g, b]
+
+    def __is_valid_sides(self, *sides):
+        """
+        Служебный, принимает неограниченное кол-во сторон, возвращает True если все стороны целые
+        положительные числа и кол-во новых сторон совпадает с текущим
+        """
+
+        return (len(sides) == self.sides_count and
+                all(isinstance(side, int) and side > 0 for side in sides))
+
+    def get_sides(self):
+        """
+        Возвращает значение атрибута __sides
+        """
+
+        return self.__sides
+
+    def __len__(self):
+        """
+        Возвращает периметр фигуры
+        """
+
+        return sum(self.__sides)
+
+    def set_sides(self, *new_sides):
+        """
+        Принимает новые стороны, если их количество не равно sides_count, то не изменять, в
+        противном случае - менять
+        """
+
+        if self.__is_valid_sides(*new_sides):
+            self.__sides = new_sides
+
+
+class Circle(Figure):
+    sides_count = 1
+
+    def __radius(self):
+        return self.__len__ * (2/3.14)
+
+    def get_square(self):
+        return (self.__len__**2)/(4*3.14)
+
+
+
+class Triangle(Figure):
+    sides_count = 3
+    __height = 0
+
+    def get_square(self):
+        pass
+
+
+class Cube(Figure):
+    sides_count = 12
+
+    def __init__(self, color, *sides, filled=False):
+        super().__init__(color, *sides, filled=filled)
+        if len(sides) == 1:
+            self.__sides = sides * self.sides_count
+        else:
+            self.__sides = 1 * self.sides_count
+
+    def get_sides(self):
+        """
+        Возвращает значение атрибута __sides
+        """
+
+        return self.__sides
+
+    def get_volume(self):
+        """
+        Возвращает объем куба
+        """
+
+        return int(self.__sides[0]) ** 3
+
+
+if __name__ == '__main__':
+    circle1 = Circle((200, 200, 100), 10)  # (Цвет, стороны)
+    cube1 = Cube((222, 35, 130), 6)
+
+    # Проверка на изменение цветов:
+    print('Проверка на изменение цветов:')
+    circle1.set_color(55, 66, 77)  # Изменится
+    print(circle1.get_color())
+    cube1.set_color(300, 70, 15)  # Не изменится
+    print(cube1.get_color())
+
+    # Проверка на изменение сторон:
+    print('Проверка на изменение сторон:')
+    cube1.set_sides(5, 3, 12, 4, 5)  # Не изменится
+    print(cube1.get_sides())
+    circle1.set_sides(15)  # Изменится
+    print(circle1.get_sides())
+
+    # Проверка периметра (круга), это и есть длина:
+    print('Проверка периметра (круга), это и есть длина:')
+    print(len(circle1))
+
+    # Проверка объёма (куба):
+    print('Проверка объёма (куба):')
+    print(cube1.get_volume())
