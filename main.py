@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, pi
 
 """
 [55, 66, 77]
@@ -16,10 +16,30 @@ class Figure:
     __color = []
 
     def __init__(self, color, *sides, filled=False):
-        if len(sides) != self.sides_count:
-            self.__sides = '1' * self.sides_count
-        else:
-            self.__sides = [i for i in sides]
+        if isinstance(self, Triangle):
+            if len(sides) == 1:
+                self.__sides = list(sides) * self.sides_count
+            elif len(sides) != self.sides_count:
+                self.__sides = '1' * self.sides_count
+            else:
+                a, b, c = [value for value in sides]
+                if a < b + c and b < a + c and c < a + b:
+                    self.__sides = [a, b, c]
+
+        elif isinstance(self, Cube):
+            if len(sides) == 1:
+                self.__sides = list(sides) * self.sides_count
+            elif len(sides) != self.sides_count:
+                self.__sides = '1' * self.sides_count
+            else:
+                self.__sides = sides
+
+        elif isinstance(self, Circle):
+            if len(sides) == 1:
+                self.__sides = sides
+            else:
+                self.__sides = 1
+
         self.__color = list(color)
         self.filled = filled
 
@@ -29,7 +49,6 @@ class Figure:
         """
 
         return f'{self.__class__.__name__}'
-
 
     def get_color(self):
         """
@@ -79,7 +98,8 @@ class Figure:
         Возвращает периметр фигуры
         """
 
-        perimetr = int(sum(self.__sides))
+        sides = self.get_sides()
+        perimetr = sum(side for side in sides)
         return perimetr
 
     def set_sides(self, *new_sides):
@@ -106,8 +126,7 @@ class Circle(Figure):
         """
         Возвращает площадь круга
         """
-
-        return f'{((len(self))**2)/(4*3.14)}'
+        return f'{round(((len(self))**2)/(4*3.14), 2)}'
 
 
 class Triangle(Figure):
@@ -120,17 +139,20 @@ class Triangle(Figure):
     sides_count = 3
     __height = 0
 
-    def __init__(self, color, *sides, filled=False):
-        super().__init__(color, *sides, filled=False)
-        a, b, c = [value for value in sides]
-        if a < b + c and b < a + c and c < a + b:
-            self.__sides = [a, b, c]
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
+        self.sides = self.get_sides()
+
+    # def __init__(self, color, *sides, filled=False):
+    #     super().__init__(color, *sides, filled=False)
+    #     a, b, c = [value for value in sides]
+    #     if a < b + c and b < a + c and c < a + b:
+    #         self.__sides = [a, b, c]
 
     def get_height(self):
-        print(self.__len__)
         p = int(len(self))/2      #Полупериметр
-        self.__height = (2/self.__sides[0])*sqrt((p*(p-self.__sides[0])*(p-self.__sides[1])*(p-self.__sides[2])))
-        return f'{self.__height}'
+        self.__height = (2/self.sides[0])*sqrt((p*(p-self.sides[0])*(p-self.sides[1])*(p-self.sides[2])))
+        return f'{round(self.__height, 2)}'
 
 
     def get_square(self):
@@ -140,33 +162,35 @@ class Triangle(Figure):
 class Cube(Figure):
     sides_count = 12
 
-    def __init__(self, color, *sides, filled=False):
-        super().__init__(color, *sides, filled=False)
-        if len(sides) == 1:
-            self.__sides = list(sides) * self.sides_count
-        else:
-            self.__sides = '1' * self.sides_count
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
+        self._sides = self.get_sides()
 
-    def get_sides(self):
-        """
-        Возвращает значение атрибута __sides
-        """
+    # def __init__(self, color, *sides, filled=False):
+    #     super().__init__(color, *sides, filled=False)
+    #     if len(sides) == 1:
+    #         self.__sides = list(sides) * self.sides_count
+    #     else:
+    #         self.__sides = '1' * self.sides_count
 
-        return self.__sides
+    # def get_sides(self):
+    #     """
+    #     Возвращает значение атрибута __sides
+    #     """
+    #
+    #     return self.__sides
 
     def get_volume(self):
         """
         Возвращает объем куба
         """
 
-        return f'Объем {self.name_()}: {int(self.__sides[0]) ** 3}'
+        return f'Объем {self.name_()}: {self._sides[0] ** 3}'
 
 
 if __name__ == '__main__':
     circle1 = Circle((200, 200, 100), 10)  # (Цвет, стороны)
     cube1 = Cube((222, 35, 130), 6)
-    triangle1 = Triangle((10, 10, 10), 3, 4, 5)
-    #triangle2 = Triangle((10, 10, 10), 3)
 
     # Проверка на изменение цветов:
     print('Проверка на изменение цветов:')
@@ -190,9 +214,19 @@ if __name__ == '__main__':
     print('Проверка объёма (куба):')
     print(cube1.get_volume())
 
+    # Другие проверки
+    print(f'\n\nДругие проверки')
+    triangle1 = Triangle((10, 10, 10), 9, 4, 5)
+    triangle2 = Triangle((10, 10, 10), 3)
+    print('Cтороны треугольника1')
+    print(triangle1.get_sides())
+    print('Cтороны треугольника2')
+    print(triangle2.get_sides())
     print('Площадь круга')
     print(circle1.get_square())
-    print('Высота треугольника')
+    print('Высота треугольника 1')
     print(triangle1.get_height())
+    print('Высота треугольника 2')
+    print(triangle2.get_height())
 
 
