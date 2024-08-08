@@ -228,5 +228,5 @@ if __name__ == '__main__':
     print(triangle1.get_height())
     print('Высота треугольника 2')
     print(triangle2.get_height())
-
+    ''''''
 
