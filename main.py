@@ -20,17 +20,20 @@ class Figure:
             if len(sides) == 1:
                 self.__sides = list(sides) * self.sides_count
             elif len(sides) != self.sides_count:
-                self.__sides = '1' * self.sides_count
+                self.__sides = [1] * self.sides_count
             else:
                 a, b, c = [value for value in sides]
                 if a < b + c and b < a + c and c < a + b:
                     self.__sides = [a, b, c]
+                else:
+                    print('Такой треугольник создать невозможно, стороны будут = [1, 1, 1]')
+                    self.__sides = [1] * self.sides_count
 
         elif isinstance(self, Cube):
             if len(sides) == 1:
                 self.__sides = list(sides) * self.sides_count
             elif len(sides) != self.sides_count:
-                self.__sides = '1' * self.sides_count
+                self.__sides = [1] * self.sides_count
             else:
                 self.__sides = sides
 
@@ -143,20 +146,14 @@ class Triangle(Figure):
         super().__init__(color, *sides)
         self.sides = self.get_sides()
 
-    # def __init__(self, color, *sides, filled=False):
-    #     super().__init__(color, *sides, filled=False)
-    #     a, b, c = [value for value in sides]
-    #     if a < b + c and b < a + c and c < a + b:
-    #         self.__sides = [a, b, c]
-
     def get_height(self):
         p = int(len(self))/2      #Полупериметр
         self.__height = (2/self.sides[0])*sqrt((p*(p-self.sides[0])*(p-self.sides[1])*(p-self.sides[2])))
-        return f'{round(self.__height, 2)}'
-
+        return round(self.__height, 2)
 
     def get_square(self):
-        pass
+        square = 0.5 * self.sides[0] * self.get_height()
+        return round(square, 2)
 
 
 class Cube(Figure):
@@ -165,20 +162,6 @@ class Cube(Figure):
     def __init__(self, color, *sides):
         super().__init__(color, *sides)
         self._sides = self.get_sides()
-
-    # def __init__(self, color, *sides, filled=False):
-    #     super().__init__(color, *sides, filled=False)
-    #     if len(sides) == 1:
-    #         self.__sides = list(sides) * self.sides_count
-    #     else:
-    #         self.__sides = '1' * self.sides_count
-
-    # def get_sides(self):
-    #     """
-    #     Возвращает значение атрибута __sides
-    #     """
-    #
-    #     return self.__sides
 
     def get_volume(self):
         """
@@ -228,5 +211,9 @@ if __name__ == '__main__':
     print(triangle1.get_height())
     print('Высота треугольника 2')
     print(triangle2.get_height())
+    print('Площадь треугольника1')
+    print(triangle1.get_square())
+    print('Площадь треугольника2')
+    print(triangle2.get_square())
     ''''''
 
