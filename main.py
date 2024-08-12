@@ -35,7 +35,11 @@ class Figure:
             elif len(sides) != self.sides_count:
                 self.__sides = [1] * self.sides_count
             else:
-                self.__sides = sides
+                if sides.count(sides[0]) == len(sides):
+                    self.__sides = list(sides)
+                else:
+                    print('Такой куб создать невозможно, стороны будут = [1 .. 1]')
+                    self.__sides = [1] * self.sides_count
 
         elif isinstance(self, Circle):
             if len(sides) == 1:
@@ -215,5 +219,15 @@ if __name__ == '__main__':
     print(triangle1.get_square())
     print('Площадь треугольника2')
     print(triangle2.get_square())
+
+    cube2 = Cube((222, 35, 130), 6,6,6,6,6,6,6,6,6,6,6,6)
+    print('Стороны куба2')
+    print(cube2.get_sides())
+    cube3 = Cube((222, 35, 130), 6,6,6,4,6,2,6,6,5,6,6,6)
+    print('Стороны куба3')
+    print(cube3.get_sides())
+
+
+
     ''''''
 
